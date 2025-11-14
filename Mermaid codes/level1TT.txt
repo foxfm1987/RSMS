@@ -1,0 +1,62 @@
+---
+config:
+  layout: dagre
+---
+erDiagram
+  TICKET_COUNTER {
+    int id PK
+    string name
+    string location
+  }
+  USER {
+    int id PK
+    string username
+    string full_name
+    string role
+  }
+  SHIFT {
+    int id PK
+    int counter_id FK
+    int opened_by_fk
+    datetime opened_at
+    datetime closed_at
+    decimal opening_balance
+    decimal closing_balance
+  }
+  TRANSACTION {
+    int id PK
+    int shift_id FK
+    decimal amount
+    datetime timestamp
+    string type    
+    string note
+  }
+  PASSENGER {
+    int id PK
+    string name
+    string contact
+  }
+  TICKET {
+    int id PK
+    string booking_ref
+    int passenger_id FK
+    int schedule_id FK
+    decimal price
+    string status   
+    datetime booked_at
+    int issued_by_fk
+  }
+  PAYMENT {
+    int id PK
+    int transaction_id FK
+    string method   
+    string reference
+  }
+  TICKET_COUNTER ||--o{ SHIFT : "hosts"
+  USER ||--o{ SHIFT : "opens/closes"
+  SHIFT ||--o{ TRANSACTION : "contains"
+  TRANSACTION ||--o{ PAYMENT : "has"
+  USER ||--o{ TRANSACTION : "records"
+  USER ||--o{ TICKET : "issues"
+  PASSENGER ||--o{ TICKET : "owns"
+  TICKET ||--o| SCHEDULE : "for"

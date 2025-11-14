@@ -1,0 +1,57 @@
+---
+config:
+  layout: elk
+---
+erDiagram
+  STATION_MASTER {
+    int user_id PK
+    string name
+    string role 
+  }
+  STATION {
+    string code PK
+    string name
+    string location
+  }
+  PLATFORM {
+    int id PK
+    int number
+  }
+  TRAIN {
+    string number PK
+    string name
+  }
+  SCHEDULE {
+    int id PK
+    datetime arrival
+    datetime departure
+    boolean stop_allowed
+    boolean cancelled
+  }
+  SIGNAL_EVENT {
+    int id PK
+    datetime timestamp
+    string action   
+    string details
+  }
+  ANNOUNCEMENT {
+    int id PK
+    datetime timestamp
+    string message
+    string type      
+  }
+  PASSENGER_MANIFEST {
+    int id PK
+    int schedule_id FK
+    int passenger_count
+  }
+  STATION_MASTER ||--o{ SIGNAL_EVENT : "creates"
+  STATION_MASTER ||--o{ ANNOUNCEMENT : "broadcasts"
+  STATION_MASTER ||--o{ SCHEDULE : "modifies/overrides"
+  STATION ||--o{ PLATFORM : "has"
+  STATION ||--o{ SCHEDULE : "hosts"
+  TRAIN ||--o{ SCHEDULE : "is_assigned_to"
+  PLATFORM ||--o{ SCHEDULE : "platform_for"
+  SCHEDULE ||--o{ PASSENGER_MANIFEST : "has"
+  SCHEDULE ||--o{ SIGNAL_EVENT : "relates_to"
+  SCHEDULE ||--o{ ANNOUNCEMENT : "notifies_for"

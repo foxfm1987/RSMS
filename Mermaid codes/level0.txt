@@ -1,0 +1,78 @@
+---
+config:
+  layout: dagre
+---
+erDiagram
+  USER {
+    int id PK
+    string username
+    string role
+    string full_name
+    string phone
+  }
+  STATION {
+    string code PK
+    string name
+    string location
+  }
+  PLATFORM {
+    int id PK
+    int number
+  }
+  TRAIN {
+    string number PK
+    string name
+    decimal max_goods_weight
+  }
+  SCHEDULE {
+    int id PK
+    datetime arrival
+    datetime departure
+    boolean stop_allowed
+    boolean cancelled
+  }
+  PASSENGER {
+    int id PK
+    string name
+    string contact
+  }
+  TICKET {
+    int id PK
+    string booking_ref
+    decimal price
+    string status
+  }
+  GOODS_CONSIGNMENT {
+    int id PK
+    string consignment_id
+    string goods_type
+    decimal weight_kg
+    boolean delivered
+  }
+  SHIFT {
+    int id PK
+    datetime opened_at
+    datetime closed_at
+    decimal opening_balance
+    decimal closing_balance
+  }
+  TRANSACTION {
+    int id PK
+    decimal amount
+    datetime timestamp
+    string description
+  }
+  USER ||--o{ SHIFT : "opens/closes"
+  SHIFT ||--o{ TRANSACTION : "contains"
+  USER ||--o{ TICKET : "creates"
+  PASSENGER ||--o{ TICKET : "holds"
+  SCHEDULE ||--o{ TICKET : "has"
+  TRAIN ||--o{ SCHEDULE : "operates"
+  STATION ||--o{ SCHEDULE : "hosts"
+  STATION ||--o{ PLATFORM : "has"
+  PLATFORM ||--o{ SCHEDULE : "assigned_to"
+  TRAIN ||--o{ GOODS_CONSIGNMENT : "carries"
+  SCHEDULE ||--o| GOODS_CONSIGNMENT : "may_assign" 
+  GOODS_CONSIGNMENT ||--o{ TRANSACTION : "may_trigger"
+  USER ||--o{ GOODS_CONSIGNMENT : "creates/handles"
+  USER ||--o{ PLATFORM : "manages"

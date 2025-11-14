@@ -1,0 +1,22 @@
+---
+config:
+  layout: elk
+---
+flowchart LR
+    SM["Station Master"] --> U1(("View Upcoming Trains")) & U2(("Manage Rail Signalling")) & U3(("Authorize / Cancel Train Stop")) & U4(("View Passenger Manifests")) & U5(("Send Station Announcements")) & U6(("Review Operational Logs"))
+    TC["Ticket Counter"] --> U7(("Issue Ticket")) & U8(("Enter Passenger Details")) & U9(("Open / Close Shift")) & U10(("Record Transaction")) & U11(("Print / Email Ticket"))
+    GO["Goods Operator"] --> U12(("Register Consignment")) & U13(("Assign Consignment to Train")) & U14(("Check Train Capacity")) & U15(("Generate Loading Manifest")) & U16(("Track Consignment Status"))
+    P["Passenger"] --> U17(("Search Trains")) & U18(("Book Passenger Ticket")) & U19(("Book Goods Transport")) & U20(("View Booking / Ticket")) & U21(("Receive Notifications"))
+    SYS["System"] --> U22(("Update Train Status")) & U23(("Broadcast Real-time Updates"))
+    U3 -. extends .-> U2
+    U13 -. includes .-> U14
+    U7 -. includes .-> U10
+    U9 -. includes .-> U10
+    U18 -. includes .-> U17
+    U5 -. includes .-> U23
+    U1 -. includes .-> U22
+    U16 -. includes .-> U23
+    SM -. monitors/requests .-> SYS
+    TC -. transaction logging .-> SYS
+    GO -. freight status updates .-> SYS
+    P -. subscribes to notifications .-> SYS

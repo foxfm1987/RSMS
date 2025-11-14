@@ -1,0 +1,80 @@
+erDiagram
+  %% Passenger - Level 1
+  PASSENGER {
+    int id PK
+    string username
+    string full_name
+    string phone
+    string email
+  }
+
+  PROFILE {
+    int id PK
+    int passenger_id FK
+    string id_document
+    string address
+    string preferences
+  }
+
+  SEARCH_HISTORY {
+    int id PK
+    int passenger_id FK
+    string origin
+    string destination
+    date travel_date
+    datetime searched_at
+  }
+
+  BOOKING {
+    int id PK
+    string booking_ref
+    int passenger_id FK
+    int schedule_id FK
+    string status    
+    decimal total_amount
+    datetime booked_at
+  }
+
+  TICKET {
+    int id PK
+    int booking_id FK
+    string seat_no
+    decimal price
+    string status
+  }
+
+  PAYMENT {
+    int id PK
+    int booking_id FK
+    decimal amount
+    string method
+    datetime paid_at
+    string payment_ref
+  }
+
+  NOTIFICATION {
+    int id PK
+    int passenger_id FK
+    string channel   
+    string message
+    datetime sent_at
+    boolean read
+  }
+
+  CONSIGNMENT_LINK {
+    int id PK
+    int passenger_id FK
+    int consignment_id FK
+    string role     
+  }
+
+  %% Relationships
+  PASSENGER ||--o{ PROFILE : "has"
+  PASSENGER ||--o{ SEARCH_HISTORY : "performs"
+  PASSENGER ||--o{ BOOKING : "makes"
+  BOOKING ||--o{ TICKET : "contains"
+  BOOKING ||--o{ PAYMENT : "has"
+  PASSENGER ||--o{ NOTIFICATION : "receives"
+  PASSENGER ||--o{ CONSIGNMENT_LINK : "associated_with"
+  CONSIGNMENT ||--o{ CONSIGNMENT_LINK : "linked_to"
+  BOOKING ||--o| SCHEDULE : "for"

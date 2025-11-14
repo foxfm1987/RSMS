@@ -1,0 +1,72 @@
+erDiagram
+  %% Goods - Level 1
+  GOODS_COUNTER {
+    int id PK
+    string name
+    string location
+  }
+
+  GOODS_OPERATOR {
+    int id PK
+    string username
+    string full_name
+  }
+
+  CONSIGNMENT {
+    int id PK
+    string consignment_id
+    int sender_id FK
+    int receiver_id FK
+    string goods_type
+    decimal weight_kg
+    string hazard_class
+    string status    
+    datetime created_at
+  }
+
+  TRAIN {
+    string number PK
+    string name
+    decimal max_goods_weight
+  }
+
+  SCHEDULE {
+    int id PK
+    string train_number FK
+    string station_code FK
+    datetime arrival
+    datetime departure
+  }
+
+  LOADING_MANIFEST {
+    int id PK
+    int schedule_id FK
+    datetime created_at
+    int created_by_fk
+  }
+
+  MANIFEST_ITEM {
+    int id PK
+    int manifest_id FK
+    int consignment_id FK
+    string stow_position
+    decimal weight_kg
+  }
+
+  WEIGHT_AUDIT {
+    int id PK
+    int consignment_id FK
+    decimal measured_weight
+    datetime timestamp
+    int recorded_by_fk
+  }
+
+  %% Relationships
+  GOODS_COUNTER ||--o{ CONSIGNMENT : "accepts/creates"
+  GOODS_OPERATOR ||--o{ CONSIGNMENT : "handles"
+  CONSIGNMENT ||--o{ WEIGHT_AUDIT : "has"
+  TRAIN ||--o{ SCHEDULE : "operates"
+  SCHEDULE ||--o{ LOADING_MANIFEST : "has"
+  LOADING_MANIFEST ||--o{ MANIFEST_ITEM : "contains"
+  CONSIGNMENT ||--o{ MANIFEST_ITEM : "listed_in"
+  SCHEDULE ||--o| MANIFEST_ITEM : "applies_to"
